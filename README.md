@@ -5,7 +5,7 @@ reference answers, powered by OpenRouter and LLMs.
 
 ## Status
 
- In development — Sprint 1 project for Turing College AI Engineering.
+ In development - Sprint 1 project for Turing College AI Engineering.
 
 ## Installation
 
