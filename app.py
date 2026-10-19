@@ -22,7 +22,6 @@ from src.llm.service import generate_interview_questions
 from src.models.question import Difficulty, QuestionSet
 from src.security.exceptions import SecurityError
 
-
 # --- Helper functions ---
 
 
@@ -403,6 +402,6 @@ if st.session_state.generations:
     else:
         tab_labels = [label for label, _ in st.session_state.generations]
         tabs = st.tabs(tab_labels)
-        for tab, (_, question_set) in zip(tabs, st.session_state.generations):
+        for tab, (_, question_set) in zip(tabs, st.session_state.generations, strict=False):
             with tab:
                 display_generation(question_set)

@@ -7,10 +7,9 @@ Does not hit the API, so tests are fast and free.
 import pytest
 
 from src.llm.exceptions import LLMParseError
-from src.models.question import Difficulty, Question, QuestionSet, Usage
+from src.models.question import Difficulty, Question, QuestionSet
 from src.security.validator import validate_input
 from src.utils.parsing import parse_question_set
-
 
 # --- Data Models ---
 
