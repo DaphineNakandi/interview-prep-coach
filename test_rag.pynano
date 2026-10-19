@@ -1,0 +1,41 @@
+"""Test RAG-lite retrieval."""
+
+from src.rag.retriever import load_knowledge_base, retrieve_context
+
+# Test 1: Knowledge base loads
+kb = load_knowledge_base()
+print(f"Loaded {len(kb)} roles: {list(kb.keys())}")
+
+# Test 2: Software Engineer match
+jd1 = (
+    "Senior Python Developer. 5+ years backend experience with APIs, "
+    "system design, and algorithms."
+)
+ctx1 = retrieve_context(jd1)
+print(f"\n=== Software Engineer JD ===")
+print(f"Matched: {'software_engineer' if 'software_engineer' in ctx1 else 'NONE'}")
+print(ctx1[:300])
+
+# Test 3: Data Scientist match
+jd2 = (
+    "Data Scientist. Strong in machine learning, statistics, and Python. "
+    "Experience with A/B testing and experiment design."
+)
+ctx2 = retrieve_context(jd2)
+print(f"\n=== Data Scientist JD ===")
+print(ctx2[:300])
+
+# Test 4: Unrelated JD
+jd3 = "Line cook at a restaurant. 2 years experience."
+ctx3 = retrieve_context(jd3)
+print(f"\n=== Unrelated JD ===")
+print(f"Result: {repr(ctx3[:100])}")
+
+# Test 5: Blended role
+jd4 = (
+    "Data Engineer with Python, SQL, and ML ops experience. "
+    "Build ETL pipelines and support machine learning workflows."
+)
+ctx4 = retrieve_context(jd4)
+print(f"\n=== Blended role JD ===")
+print(ctx4[:500])

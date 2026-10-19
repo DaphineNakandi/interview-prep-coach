@@ -17,6 +17,7 @@ from src.llm.exceptions import LLMParseError
 from src.models.question import Difficulty, QuestionSet
 from src.prompts.system_prompts import PROMPTS
 from src.prompts.user_prompt import build_user_prompt
+from src.rag.retriever import retrieve_context
 from src.security.exceptions import SecurityError
 from src.security.guard import check_input_safety
 from src.security.validator import validate_input
@@ -32,6 +33,7 @@ def generate_interview_questions(
     prompt_variant: str = "few_shot",
     model: str | None = None,
     enable_llm_guard: bool = True,
+    enable_rag: bool = True,
 ) -> QuestionSet:
     """Generate interview questions for a job description.
 
@@ -56,6 +58,7 @@ def generate_interview_questions(
         LLMAuthError, LLMRateLimitError, LLMConnectionError,
         LLMTruncatedError, LLMParseError, LLMError.
     """
+
     # Layer 1: deterministic validation
     is_valid, message = validate_input(job_description)
     if not is_valid:
@@ -70,12 +73,19 @@ def generate_interview_questions(
                 f"{guard_result.reason}"
             )
 
+
+    # Layer 3: RAG-lite retrieval (optional)
+    context = ""
+    if enable_rag:
+        context = retrieve_context(job_description)
+
     # Build prompts
     system_prompt = PROMPTS[prompt_variant]
     user_prompt = build_user_prompt(
         job_description=job_description,
         difficulty=Difficulty(difficulty),
         num_questions=num_questions,
+        context=context,
     )
 
     # Call the LLM

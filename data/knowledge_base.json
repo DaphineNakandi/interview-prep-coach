@@ -1,0 +1,61 @@
+{
+  "software_engineer": {
+    "keywords": ["software engineer", "developer", "programmer", "backend", "frontend", "full stack", "python", "javascript", "java", "api", "algorithms", "data structures", "system design", "git"],
+    "common_topics": ["system design", "algorithms", "debugging", "code review", "testing", "version control", "API design"],
+    "question_patterns": [
+      "Tell me about a time you debugged a production issue.",
+      "How would you design a URL shortener?",
+      "Describe a time you refactored legacy code.",
+      "How do you approach code reviews?",
+      "Explain the difference between a list and a tuple in Python."
+    ]
+  },
+  "data_scientist": {
+    "keywords": ["data scientist", "machine learning", "ml", "statistics", "python", "sql", "pandas", "numpy", "modeling", "experimentation", "a/b testing", "regression", "classification"],
+    "common_topics": ["statistics", "machine learning", "experiment design", "data cleaning", "feature engineering", "model evaluation"],
+    "question_patterns": [
+      "Explain the bias-variance tradeoff.",
+      "How would you handle missing data in a dataset?",
+      "Design an experiment to test a new feature.",
+      "How do you evaluate a classification model?",
+      "Describe a time your analysis changed a business decision."
+    ]
+  },
+  "product_manager": {
+    "keywords": ["product manager", "pm", "roadmap", "prioritization", "stakeholder", "user research", "metrics", "product strategy", "agile", "scrum"],
+    "common_topics": ["roadmapping", "prioritization", "stakeholder management", "user research", "metrics", "product strategy"],
+    "question_patterns": [
+      "How would you prioritize features for a new product?",
+      "Describe a time you had to say no to a stakeholder.",
+      "How do you measure product success?",
+      "Walk me through your process for user research.",
+      "Tell me about a product decision you regret."
+    ]
+  },
+  "devops_engineer": {
+    "keywords": ["devops", "sre", "site reliability", "ci/cd", "kubernetes", "docker", "terraform", "aws", "gcp", "azure", "monitoring", "infrastructure", "automation"],
+    "common_topics": ["CI/CD", "infrastructure as code", "monitoring", "incident response", "containerization", "cloud platforms"],
+    "question_patterns": [
+      "How would you design a CI/CD pipeline for a microservices app?",
+      "Describe a production incident you handled.",
+      "How do you monitor a distributed system?",
+      "What's your approach to infrastructure as code?",
+      "Explain the difference between Docker and Kubernetes."
+    ]
+  },
+  "data_engineer": {
+    "keywords": ["data engineer", "etl", "elt", "data pipeline", "warehouse", "sql", "spark", "airflow", "kafka", "big data", "data modeling"],
+    "common_topics": ["ETL/ELT", "data modeling", "data pipelines", "data warehousing", "streaming", "data quality"],
+    "question_patterns": [
+      "How would you design an ETL pipeline for millions of records?",
+      "What's the difference between a data lake and a data warehouse?",
+      "How do you ensure data quality in a pipeline?",
+      "Describe a time you debugged a broken data pipeline.",
+      "How would you handle late-arriving data?"
+    ]
+  }
+}
+
+
+
+
