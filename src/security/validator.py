@@ -3,13 +3,11 @@
 Fast, cheap checks that reject obviously invalid or malicious inputs
 before the LLM guard runs (which is slower and costs tokens).
 """
+
 MIN_INPUT_LENGTH = 50
 MAX_INPUT_LENGTH = 5000
 
 # Patterns that strongly suggest prompt injection or XSS.
-# Conservative: only obvious injection phrases and XSS markers.
-# The LLM guard catches subtle cases.
-
 INJECTION_PATTERNS = [
     "ignore previous instructions",
     "ignore all previous",
@@ -37,6 +35,19 @@ def validate_input(text: str) -> tuple[bool, str]:
     if not text or not text.strip():
         return False, "Input cannot be empty."
 
+    # Check injection patterns FIRST.
+    lower = text.lower()
+    for pattern in INJECTION_PATTERNS:
+        if pattern in lower:
+            idx = lower.find(pattern)
+            original_match = text[idx:idx + len(pattern)]
+            return (
+                False,
+                f"Input contains a suspicious pattern: '{original_match}'. "
+                f"Please rephrase your job description.",
+            )
+
+    # Then check length constraints.
     if len(text) < MIN_INPUT_LENGTH:
         return (
             False,
@@ -51,20 +62,5 @@ def validate_input(text: str) -> tuple[bool, str]:
             f"Please limit to {MAX_INPUT_LENGTH} characters.",
         )
 
-    lower = text.lower()
-    for pattern in INJECTION_PATTERNS:
-        if pattern in lower:
-            # Find the original casing for display
-            idx = lower.find(pattern)
-            original_match = text[idx:idx + len(pattern)]
-
-            return (
-                False,
-                f"Input contains a suspicious pattern: '{original_match}'. "
-                f"Please rephrase your job description.",
-            )
-
     return True, "Input is valid."
-
-
 
