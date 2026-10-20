@@ -6,6 +6,7 @@ waste tokens on inputs that are already invalid.
 """
 
 import json
+import os
 import re
 from dataclasses import dataclass
 
@@ -51,9 +52,10 @@ def check_input_safety(text: str, settings: Settings) -> GuardResult:
         LLMError: If the guard LLM call fails (fail-closed — reject
             input if the guard can't verify it).
     """
+    api_key = settings.openrouter_api_key or os.getenv("OPENROUTER_API_KEY")
     client = OpenAI(
         base_url=settings.base_url,
-        api_key=settings.openrouter_api_key,
+        api_key=api_key,
     )
 
     try:

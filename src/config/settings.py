@@ -11,14 +11,18 @@ from dotenv import load_dotenv
 
 # Load .env file at import time.
 # This must happen before os.getenv() calls below.
-load_dotenv()
+from  pathlib import Path
+
+# Force load the .env file from the root of the project
+env_path = Path(__file__).resolve().parent.parent.parent / ".env"
+load_dotenv(dotenv_path=env_path, override=True)
 
 
 # Defaults
 # Code-level defaults. Overridable via .env.
 # Having these here means the app works out of the box
 
-DEFAULT_MODEL = "open/gpt-5-mini"
+DEFAULT_MODEL = "openai/gpt-5-mini"
 DEFAULT_TEMPERATURE = 0.7
 DEFAULT_MAX_TOKENS = 4000
 DEFAULT_NUM_QUESTIONS = 5
