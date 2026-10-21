@@ -31,21 +31,10 @@ class LLMClient:
 
     Holds config (API key, base URL, model) and the SDK client instance.
     Instantiate once, reuse across calls.
-
-    Attributes:
-        settings: Application settings.
-        model: The model slug to use for generation.
-        client: The underlying OpenAI SDK client.
     """
 
     def __init__(self, settings: Settings, model: str | None = None) -> None:
-        """Initialize the client.
-
-        Args:
-            settings: Application settings with API key and base URL.
-            model: Optional model override. If None, uses
-                settings.default_model.
-        """
+        """Initialize the client."""
         if not settings.is_configured:
             raise LLMAuthError(
                 "OPENROUTER_API_KEY is not set. Add it to your .env file."
@@ -65,33 +54,14 @@ class LLMClient:
         temperature: float | None = None,
         max_tokens: int | None = None,
     ) -> RawResponse:
-        """Send a chat completion request and return the raw response.
-
-        Args:
-            system_prompt: The system message (persona, rules, format).
-            user_prompt: The user message (job-specific details).
-            temperature: Sampling temperature. If None, uses
-                settings.default_temperature.
-            max_tokens: Max tokens for the response. If None, uses
-                settings.default_max_tokens.
-
-        Returns:
-            RawResponse with content, model, finish_reason, and usage.
-
-        Raises:
-            LLMAuthError: If the API key is invalid.
-            LLMRateLimitError: If the provider rate limit is hit.
-            LLMConnectionError: If there's a network issue.
-            LLMTruncatedError: If the response was truncated.
-            LLMError: For other API errors.
-        """
+        """Send a chat completion request and return the raw response."""
         temperature = (
-            temperature if temperature is not None
+            temperature
+            if temperature is not None
             else self.settings.default_temperature
         )
         max_tokens = (
-            max_tokens if max_tokens is not None
-            else self.settings.default_max_tokens
+            max_tokens if max_tokens is not None else self.settings.default_max_tokens
         )
 
         try:
@@ -154,5 +124,68 @@ class LLMClient:
             finish_reason=choice.finish_reason or "unknown",
             usage=usage,
         )
+
+    def evaluate_answer(
+        self,
+        question: str,
+        reference_answer: str,
+        user_answer: str,
+        prompt_variant: str = "few_shot",
+    ) -> str:
+        """Evaluate a user's answer against a reference answer.
+
+        Adapts the feedback style based on the selected prompt technique.
+        """
+        # Base persona
+        base_prompt = (
+            "You are an expert technical interviewer. Your job is to evaluate "
+            "a candidate's answer to an interview question."
+        )
+
+        # Adapt the evaluation style based on the prompt variant
+        if prompt_variant == "chain_of_thought":
+            style_prompt = (
+                "Evaluate the candidate's answer by breaking down their logic step-by-step. "
+                "First analyze what they did well, then trace their logic to identify "
+                "what they missed or where they could improve."
+            )
+        elif prompt_variant == "zero_shot":
+            style_prompt = (
+                "Provide a direct, concise evaluation of the candidate's answer. "
+                "Highlight what was good and what was missing."
+            )
+        elif prompt_variant == "role_based":
+            style_prompt = (
+                "Evaluate the candidate's answer as a strict but fair senior hiring manager. "
+                "Be demanding but constructive in your feedback."
+            )
+        elif prompt_variant == "structured_output":
+            style_prompt = (
+                "Evaluate the candidate's answer by organizing your feedback into "
+                "two clear sections: 'Strengths' and 'Areas for Improvement'."
+            )
+        else:  # Default (few_shot)
+            style_prompt = (
+                "Provide constructive feedback comparing their answer to the reference answer. "
+                "Highlight what they did well and what they missed."
+            )
+
+        system_prompt = f"{base_prompt} {style_prompt} Keep your feedback under 150 words."
+
+        user_prompt = (
+            f"Question: {question}\n\n"
+            f"Reference Answer: {reference_answer}\n\n"
+            f"Candidate's Answer: {user_answer}\n\n"
+            "Provide your evaluation:"
+        )
+
+        # We reuse the chat method, but we don't need JSON parsing here.
+        raw = self.chat(
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+            temperature=0.7,
+            max_tokens=1500,
+        )
+        return raw.content or "Could not evaluate answer."
 
 

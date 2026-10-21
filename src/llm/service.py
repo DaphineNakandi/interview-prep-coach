@@ -34,6 +34,8 @@ def generate_interview_questions(
     model: str | None = None,
     enable_llm_guard: bool = True,
     enable_rag: bool = True,
+    use_star: bool = False,
+    max_tokens: int | None = None,
 ) -> QuestionSet:
     """Generate interview questions for a job description.
 
@@ -86,11 +88,15 @@ def generate_interview_questions(
         difficulty=Difficulty(difficulty),
         num_questions=num_questions,
         context=context,
+        use_star=use_star
     )
 
     # Call the LLM
     client = LLMClient(settings=settings, model=model)
-    raw = client.chat(system_prompt=system_prompt, user_prompt=user_prompt)
+    raw = client.chat(
+        system_prompt=system_prompt,
+          user_prompt=user_prompt,
+          max_tokens=max_tokens,)
 
     if raw.content is None:
         raise LLMParseError(
@@ -105,6 +111,7 @@ def generate_interview_questions(
         model_used=raw.model,
         prompt_variant=prompt_variant,
         usage=raw.usage,
+
     )
 
 

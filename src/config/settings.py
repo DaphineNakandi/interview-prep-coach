@@ -7,11 +7,11 @@ that other modules import. No hardcoded values elsewhere in the codebase.
 import os
 from dataclasses import dataclass
 
-from dotenv import load_dotenv
-
 # Load .env file at import time.
 # This must happen before os.getenv() calls below.
-from  pathlib import Path
+from pathlib import Path
+
+from dotenv import load_dotenv
 
 # Force load the .env file from the root of the project
 env_path = Path(__file__).resolve().parent.parent.parent / ".env"

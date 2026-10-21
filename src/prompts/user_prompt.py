@@ -12,7 +12,21 @@ def build_user_prompt(
     difficulty: Difficulty,
     num_questions: int,
     context: str = "",
+    use_star: bool = False
 ) -> str:
+    parts = [
+        f"Generate {num_questions} interview questions at {difficulty} difficulty.",
+        "",
+    ]
+
+    if use_star:
+        parts.append("IMPORTANT: Focus heavily on behavioral questions that require the candidate" \
+        " to use the STAR method (Situation, Task, Action, Result).")
+        parts.append("")
+
+
+    if context:
+        parts.append("Relevant context for this role:")
     """Build the user prompt for interview question generation.
 
     Args:
