@@ -15,6 +15,11 @@ reference answers, powered by OpenRouter and Large Language Models.
 - **Cost Transparency:** Displays exact token usage and cost per generation.
 - **Export:** Download generated questions as Markdown, JSON, or Plain Text.
 
+
+- **Mock Interview Mode:** An interactive, conversational practice loop where the AI asks one question at a time, evaluates the user's typed answer, and provides actionable feedback before revealing the ideal answer.
+- **STAR Method Toggle:** A dedicated toggle that forces the LLM to generate behavioral questions strictly focused on the Situation, Task, Action, Result framework.
+- **Dynamic Evaluation:** The AI's evaluation style changes based on the prompt technique selected (e.g., Chain-of-Thought evaluates logic step-by-step, while Structured Output separates Strengths and Improvements).
+
 ## Architecture
 
 The app is built with a strict separation of concerns:
