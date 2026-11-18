@@ -1,41 +1,113 @@
 # Interview Prep Coach
 
-A Streamlit web app that generates job-specific interview questions with 
-reference answers, powered by OpenRouter and Large Language Models.
+An interactive Streamlit application that helps you prepare for technical and professional interviews. Provide a job description, configure the generation settings, and use an LLM to create role-focused questions and reference answers.
 
 ## Features
 
-- **Tailored Generation:** Paste any job description and get questions specifically tailored to that role.
-- **Configurable:** Adjust difficulty, number of questions, model, prompt technique, and temperature.
-- **5 Prompt Techniques:** Compare Zero-Shot, Few-Shot, Chain-of-Thought, Role-Based, and Structured Output.
-- **RAG-lite Context:** Uses a keyword-based retriever to inject role-specific context into the prompt.
-- **Two-Layer Security:** 
-  1. Deterministic input validation (length, injection patterns).
-  2. LLM-based guard that screens inputs for malicious intent.
-- **Cost Transparency:** Displays exact token usage and cost per generation.
-- **Export:** Download generated questions as Markdown, JSON, or Plain Text.
+- **Role-focused questions** — Generate interview questions from a supplied job description.
+- **Configurable practice** — Choose a target role, difficulty, number of questions, model, temperature, and prompt technique.
+- **Prompt technique comparison** — Experiment with Zero-Shot, Few-Shot, Chain-of-Thought, Role-Based, and Structured Output prompt variants.
+- **Reference answers and follow-ups** — Review suggested answers, tested skills, categories, difficulty, and follow-up questions.
+- **Answer feedback** — Type an answer and request AI-generated feedback against the reference answer.
+- **Input safeguards** — Apply deterministic validation and an LLM-based security check before generation.
+- **Usage visibility** — Display token usage and estimated API cost when available.
+- **Export** — Download generated question sets as Markdown, JSON, or plain text.
 
+## Tech stack
 
-- **Mock Interview Mode:** An interactive, conversational practice loop where the AI asks one question at a time, evaluates the user's typed answer, and provides actionable feedback before revealing the ideal answer.
-- **STAR Method Toggle:** A dedicated toggle that forces the LLM to generate behavioral questions strictly focused on the Situation, Task, Action, Result framework.
-- **Dynamic Evaluation:** The AI's evaluation style changes based on the prompt technique selected (e.g., Chain-of-Thought evaluates logic step-by-step, while Structured Output separates Strengths and Improvements).
+- Python 3.11+
+- Streamlit
+- OpenAI Python SDK
+- OpenRouter
+- pytest and Ruff (development tools)
 
-## Architecture
+## Run locally
 
-The app is built with a strict separation of concerns:
+### 1. Clone the repository
 
-- `src/models/`: Data models (Question, QuestionSet, Usage, Difficulty).
-- `src/config/`: Settings loading and validation.
-- `src/prompts/`: System and user prompt builders.
-- `src/llm/`: OpenRouter API client, exceptions, and service orchestration.
-- `src/security/`: Input validator and LLM-based guard.
-- `src/rag/`: Knowledge base and keyword retriever.
-- `src/utils/`: JSON parsing utilities.
-- `app.py`: Streamlit UI.
+```bash
+git clone https://github.com/DaphineNakandi/interview-prep-coach.git
+cd interview-prep-coach
+```
 
-## Installation
+### 2. Create and activate a virtual environment
 
-1. **Clone the repo:**
-   ```bash
-   git clone <your-repo-url>
-   cd interview-prep-coach
+**Windows (PowerShell):**
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+**macOS / Linux:**
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+### 3. Install the project
+
+```bash
+python -m pip install --upgrade pip
+pip install -e ".[dev]"
+```
+
+### 4. Configure your API key
+
+Copy `.env.example` to `.env` and add your OpenRouter API key:
+
+```env
+OPENROUTER_API_KEY=your_openrouter_api_key
+DEFAULT_MODEL=openai/gpt-5-mini
+DEFAULT_TEMPERATURE=0.7
+DEFAULT_MAX_TOKENS=4000
+```
+
+Never commit `.env` or share your API key.
+
+### 5. Start the app
+
+```bash
+streamlit run app.py
+```
+
+Streamlit will print a local URL to open in your browser.
+
+## Run tests
+
+```bash
+pytest
+```
+
+Run Ruff checks with:
+
+```bash
+ruff check .
+```
+
+## Project structure
+
+```text
+interview-prep-coach/
+├── app.py                  # Streamlit interface
+├── src/
+│   ├── config/             # Application settings
+│   ├── llm/                # LLM client and generation services
+│   ├── models/             # Question and usage data models
+│   ├── prompts/            # Prompt templates and builders
+│   ├── rag/                # Role-context retrieval
+│   ├── security/           # Input validation and LLM guard
+│   └── utils/              # Supporting utilities
+├── tests/                  # Automated tests
+├── .env.example            # Environment variable template
+└── pyproject.toml          # Dependencies and tool configuration
+```
+
+## Notes
+
+This project uses an API provider, so generating questions and evaluating answers may incur usage costs depending on the selected model and provider account. The security checks are safeguards, not a guarantee that every malicious input will be detected.
+
+## Author
+
+Daphine Nakandi
